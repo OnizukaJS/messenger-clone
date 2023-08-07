@@ -9,8 +9,6 @@ const Sidebar = async ({
     children: React.ReactNode
 }) => {
   const currentUser = await getCurrentUser()
-  console.log("currentUser", currentUser)
-  console.log("Hello")
 
   return (
     <div className="h-full">
