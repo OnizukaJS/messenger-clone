@@ -16,7 +16,7 @@ const getConversations = async () => {
                 }
             },
             orderBy: {
-                lastMessage: 'desc'
+                lastMessageAt: 'desc'
             },
             include: {
                 users: true,
