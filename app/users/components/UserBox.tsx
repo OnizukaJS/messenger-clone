@@ -1,6 +1,7 @@
 "use client"
 
 import Avatar from "@/app/components/Avatar"
+import LoadingModal from "@/app/components/LoadingModal"
 import { User } from "@prisma/client"
 import axios from "axios"
 import { useRouter } from "next/navigation"
@@ -28,6 +29,8 @@ const UserBox: React.FC<UserBoxProps> = ({
         .finally(() => setIsLoading(false))
     }, [data, router])
 
+    if (isLoading) return <LoadingModal />
+    
     return (
         <div
             onClick={handleClick}
