@@ -1,6 +1,7 @@
 import getCurrentUser from "@/app/actions/getCurrentUser"
 import { NextResponse } from "next/server"
 import prisma from "@/app/libs/prismadb"
+import { pusherServer } from "@/app/libs/pusher"
 
 export async function POST(
     request: Request
@@ -64,6 +65,23 @@ export async function POST(
                     }
                 }
             }
+        })
+
+        // The client is going to expect this 'messages:new'
+        // and is going to receive this newMessage object
+        // and assign it to the body element in real time
+        // Every user that is using this conversationId will receive the update
+        await pusherServer.trigger(conversationId, 'messages:new', newMessage)
+
+        const lastMessage = updatedConversation.messages[updatedConversation.messages.length - 1]
+
+        // To update the message that is seen on the sidebar
+        // under the user name
+        updatedConversation.users.map((user) => {
+            pusherServer.trigger(user.email!, 'conversation:update', {
+                id: conversationId,
+                messages: [lastMessage]
+            })
         })
 
         return NextResponse.json(newMessage)
